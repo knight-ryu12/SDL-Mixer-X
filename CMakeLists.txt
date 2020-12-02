@@ -18,6 +18,7 @@ include(CheckCCompilerFlag)
 set(CMAKE_MODULE_PATH "${SDLMixerX_SOURCE_DIR}/cmake;${SDLMixerX_SOURCE_DIR}/cmake/find;${SDLMixerX_SOURCE_DIR}/src/codecs;${CMAKE_MODULE_PATH}")
 
 include(CppNeedCheck)
+include(WhichLicense)
 
 if(NOT CMAKE_VERSION VERSION_LESS 2.8.12)
     set(CMAKE_MACOSX_RPATH 0)
@@ -71,6 +72,13 @@ option(AUDIO_CODECS_BUILD_LOCAL_SDL2 "Build SDL2 from local AudioCodecs' copy" O
 set(AUDIO_CODECS_REPO_PATH "" CACHE PATH "Path to the AudioCodecs dependencies pack")
 set(AUDIO_CODECS_INSTALL_PATH "" CACHE PATH "Path to installed AudioCodecs prefix")
 
+option(SDL_MIXER_CLEAR_FOR_ZLIB_LICENSE   "Disable all GPL/LGPL dependencies to make binary being licensed with ZLib license" OFF)
+option(SDL_MIXER_CLEAR_FOR_LGPL_LICENSE   "Disable all GPL dependencies to make binary being licensed with LGPL license" OFF)
+
+if(SDL_MIXER_CLEAR_FOR_ZLIB_LICENSE AND SDL_MIXER_CLEAR_FOR_LGPL_LICENSE)
+    message(FATAL_ERROR "You shouldn't use SDL_MIXER_CLEAR_FOR_ZLIB_LICENSE and SDL_MIXER_CLEAR_FOR_LGPL_LICENSE flags together!")
+endif()
+
 option(USE_SYSTEM_SDL2   "Use SDL2 from system" OFF)
 
 if(CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX OR CMAKE_C_COMPILER_ID STREQUAL "Clang")
@@ -103,6 +111,8 @@ if(NOT AUDIO_CODECS_REPO_PATH AND NOT AUDIO_CODECS_INSTALL_PATH)
         set(SDL2_REPO_PATH ${CMAKE_INSTALL_PREFIX})
         set(SDL2_INCLUDE_PATH ${CMAKE_INSTALL_PREFIX}/include/SDL2)
         set(SDL2_LIBS_PATH ${CMAKE_INSTALL_PREFIX}/lib)
+        set(BUILD_AUDIO_CODECS_NEEDED TRUE)
+        message("== AudioCodecs will be built locally ==")
         include(cmake/DownloadAudioCodecs.cmake)
         set(AUDIO_CODECS_REPO_PATH ${AUDIO_CODECS_REPOSITORY_PATH})
         set(AUDIO_CODECS_INSTALL_PATH ${AUDIO_CODECS_INSTALL_DIR})
@@ -329,7 +339,7 @@ if(SDL_MIXER_X_STATIC AND NOT BUILD_AS_VB6_BINDING)
     target_include_directories(SDL2_mixer_ext_Static PUBLIC
         ${SDLMixerX_SOURCE_DIR}/include
     )
-    if(DOWNLOAD_AUDIO_CODECS_DEPENDENCY AND AUDIO_CODECS_INSTALL_PATH)
+    if(BUILD_AUDIO_CODECS_NEEDED)
         add_dependencies(SDL2_mixer_ext_Static AudioCodecs)
     endif()
     if(NOT CMAKE_VERSION VERSION_LESS 3.0.2)
@@ -372,7 +382,7 @@ if(SDL_MIXER_X_SHARED AND NOT BUILD_AS_VB6_BINDING)
     target_include_directories(SDL2_mixer_ext PUBLIC
         ${SDLMixerX_SOURCE_DIR}/include
     )
-    if(DOWNLOAD_AUDIO_CODECS_DEPENDENCY AND AUDIO_CODECS_INSTALL_PATH)
+    if(BUILD_AUDIO_CODECS_NEEDED)
         add_dependencies(SDL2_mixer_ext AudioCodecs)
     endif()
     if(NOT CMAKE_VERSION VERSION_LESS 3.0.2)
@@ -411,7 +421,7 @@ if(BUILD_AS_VB6_BINDING)
     )
     set_target_properties(SDL2_mixer_ext_VB6 PROPERTIES LINK_FLAGS
         "-Wl,--add-stdcall-alias -static-libgcc -static-libstdc++ -static -lpthread")
-    if(DOWNLOAD_AUDIO_CODECS_DEPENDENCY AND AUDIO_CODECS_INSTALL_PATH)
+    if(BUILD_AUDIO_CODECS_NEEDED)
         add_dependencies(SDL2_mixer_ext_VB6 AudioCodecs)
     endif()
     if(NOT CMAKE_VERSION VERSION_LESS 3.0.2)
@@ -515,3 +525,4 @@ print_sumary("libADLMIDI" USE_MIDI_ADLMIDI ADLMIDI_FOUND ADLMIDI_LIBRARIES)
 print_sumary("libOPNMIDI" USE_MIDI_OPNMIDI OPNMIDI_FOUND OPNMIDI_LIBRARIES)
 print_sumary("FluidSynth" USE_MIDI_FLUIDSYNTH FluidSynth_FOUND FluidSynth_LIBRARIES)
 print_sumary("Timidity-SDL" USE_MIDI_TIMIDITY TIMIDITYSDL_FOUND TIMIDITYSDL_LIBRARIES)
+printLicense()

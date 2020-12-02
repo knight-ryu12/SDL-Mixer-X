@@ -1,5 +1,5 @@
 option(USE_GME             "Build with Game Music Emulators library" ON)
-if(USE_GME)
+if(USE_GME AND NOT SDL_MIXER_CLEAR_FOR_ZLIB_LICENSE AND NOT SDL_MIXER_CLEAR_FOR_LGPL_LICENSE)
     option(USE_GME_DYNAMIC "Use dynamical loading of Game Music Emulators library" OFF)
 
     if(USE_SYSTEM_AUDIO_LIBRARIES)
@@ -49,7 +49,12 @@ if(USE_GME)
     endif()
 
     if(GME_FOUND)
-        message("== using GME ==")
+        message("== using GME (LGPLv2.1+ or GPLv2+ if MAME YM2612 emulator was used) ==")
+        if(DOWNLOAD_AUDIO_CODECS_DEPENDENCY)
+            setLicense(LICENSE_GPL_2p)  # at AudioCodecs set, the MAME YM2612 emualtor is enabled by default
+        else()
+            setLicense(LICENSE_LGPL_2_1p)
+        endif()
         list(APPEND SDL_MIXER_DEFINITIONS -DMUSIC_GME)
         list(APPEND SDL_MIXER_INCLUDE_PATHS ${GME_INCLUDE_DIRS})
         if(NOT USE_SYSTEM_AUDIO_LIBRARIES OR NOT USE_GME_DYNAMIC)

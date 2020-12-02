@@ -1,6 +1,6 @@
 
 option(USE_MP3_MPG123     "[WIP, DON'T USE IT] Build with MPG123 MP3 codec" OFF)
-if(USE_MP3_MPG123)
+if(USE_MP3_MPG123 AND NOT SDL_MIXER_CLEAR_FOR_ZLIB_LICENSE)
     option(USE_MP3_MPG123_DYNAMIC "Use dynamical loading of MPG123" OFF)
 
     if(NOT USE_SYSTEM_AUDIO_LIBRARIES)
@@ -16,6 +16,10 @@ if(USE_MP3_MPG123)
     endif()
 
     if(MPG123_FOUND)
+        message("== using MPG123 (LGPLv2.1+) ==")
+        if(NOT USE_MP3_MPG123_DYNAMIC)
+            setLicense(LICENSE_LGPL_2_1p)
+        endif()
         list(APPEND SDL_MIXER_DEFINITIONS -DMUSIC_MP3_MPG123)
         list(APPEND SDL_MIXER_INCLUDE_PATHS ${MPG123_INCLUDE_DIRS})
         if(NOT USE_SYSTEM_AUDIO_LIBRARIES OR NOT USE_MP3_MPG123_DYNAMIC)

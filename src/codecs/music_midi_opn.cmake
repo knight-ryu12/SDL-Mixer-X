@@ -1,5 +1,5 @@
 option(USE_MIDI_OPNMIDI    "Build with libOPNMIDI OPN2 Emulator based MIDI sequencer support" ON)
-if(USE_MIDI_OPNMIDI)
+if(USE_MIDI_OPNMIDI AND NOT SDL_MIXER_CLEAR_FOR_ZLIB_LICENSE AND NOT SDL_MIXER_CLEAR_FOR_LGPL_LICENSE)
     option(USE_MIDI_OPNMIDI_DYNAMIC "Use dynamical loading of libOPNMIDI library" OFF)
 
     if(USE_SYSTEM_AUDIO_LIBRARIES)
@@ -31,7 +31,8 @@ if(USE_MIDI_OPNMIDI)
     endif()
 
     if(OPNMIDI_FOUND)
-        message("== using OPNMIDI ==")
+        message("== using OPNMIDI (GPLv3+) ==")
+        setLicense(LICENSE_GPL_3p)
         list(APPEND SDL_MIXER_DEFINITIONS -DMUSIC_MID_OPNMIDI)
         set(LIBMATH_NEEDED 1)
         list(APPEND SDL_MIXER_INCLUDE_PATHS ${OPNMIDI_INCLUDE_DIRS})

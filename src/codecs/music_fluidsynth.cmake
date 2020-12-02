@@ -1,5 +1,5 @@
 option(USE_MIDI_FLUIDSYNTH "Build with FluidSynth wave table MIDI sequencer support" OFF)
-if(USE_MIDI_FLUIDSYNTH)
+if(USE_MIDI_FLUIDSYNTH AND NOT SDL_MIXER_CLEAR_FOR_ZLIB_LICENSE)
     option(USE_MIDI_FLUIDSYNTH_DYNAMIC "Use dynamical loading of FluidSynth" OFF)
 
     if(USE_SYSTEM_AUDIO_LIBRARIES)
@@ -21,7 +21,10 @@ if(USE_MIDI_FLUIDSYNTH)
     endif()
 
     if(FluidSynth_FOUND)
-        message("== using FluidSynth ==")
+        message("== using FluidSynth (LGPLv2.1+) ==")
+        if(NOT USE_MIDI_FLUIDSYNTH_DYNAMIC)
+            setLicense(LICENSE_LGPL_2_1p)
+        endif()
         list(APPEND SDL_MIXER_DEFINITIONS -DMUSIC_MID_FLUIDSYNTH)
         list(APPEND SDL_MIXER_INCLUDE_PATHS ${FluidSynth_INCLUDE_DIRS})
         if(NOT USE_SYSTEM_AUDIO_LIBRARIES OR NOT USE_MIDI_FLUIDSYNTH_DYNAMIC)

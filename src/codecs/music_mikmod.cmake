@@ -1,5 +1,5 @@
 option(USE_MIKMOD          "Build with MikMod library" OFF)
-if(USE_MIKMOD)
+if(USE_MIKMOD AND NOT SDL_MIXER_CLEAR_FOR_ZLIB_LICENSE)
     option(USE_MIKMOD_DYNAMIC "Use dynamical loading of MikMod" OFF)
 
     if(USE_SYSTEM_AUDIO_LIBRARIES)
@@ -21,7 +21,10 @@ if(USE_MIKMOD)
     endif()
 
     if(MikMod_FOUND)
-        message("== using MikMod ==")
+        message("== using MikMod (LGPLv2.1+) ==")
+        if(NOT USE_MIKMOD_DYNAMIC)
+            setLicense(LICENSE_LGPL_2_1p)
+        endif()
         list(APPEND SDL_MIXER_DEFINITIONS -DMUSIC_MOD_MIKMOD)
         if(NOT USE_SYSTEM_AUDIO_LIBRARIES OR NOT USE_MikMod_DYNAMIC)
             list(APPEND SDLMixerX_LINK_LIBS ${MikMod_LIBRARIES})

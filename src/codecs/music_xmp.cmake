@@ -1,5 +1,5 @@
 option(USE_XMP         "Build with XMP library" ON)
-if(USE_XMP)
+if(USE_XMP AND NOT SDL_MIXER_CLEAR_FOR_ZLIB_LICENSE)
     option(USE_XMP_DYNAMIC "Use dynamical loading of XMP library" OFF)
 
     if(USE_SYSTEM_AUDIO_LIBRARIES)
@@ -27,7 +27,10 @@ if(USE_XMP)
     endif()
 
     if(XMP_FOUND)
-        message("== using libXMP ==")
+        message("== using libXMP (LGPL v2.1+) ==")
+        if(NOT USE_XMP_DYNAMIC)
+            setLicense(LICENSE_LGPL_2_1p)
+        endif()
         list(APPEND SDL_MIXER_DEFINITIONS -DMUSIC_MOD_XMP)
         list(APPEND SDL_MIXER_INCLUDE_PATHS ${XMP_INCLUDE_DIRS})
         if(NOT USE_SYSTEM_AUDIO_LIBRARIES OR NOT USE_XMP_DYNAMIC)

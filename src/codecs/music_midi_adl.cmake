@@ -1,5 +1,5 @@
 option(USE_MIDI_ADLMIDI    "Build with libADLMIDI OPL3 Emulator based MIDI sequencer support" ON)
-if(USE_MIDI_ADLMIDI)
+if(USE_MIDI_ADLMIDI AND NOT SDL_MIXER_CLEAR_FOR_ZLIB_LICENSE AND NOT SDL_MIXER_CLEAR_FOR_LGPL_LICENSE)
     option(USE_MIDI_ADLMIDI_DYNAMIC "Use dynamical loading of libADLMIDI library" OFF)
 
     if(USE_SYSTEM_AUDIO_LIBRARIES)
@@ -31,7 +31,8 @@ if(USE_MIDI_ADLMIDI)
     endif()
 
     if(ADLMIDI_FOUND)
-        message("== using ADLMIDI ==")
+        message("== using ADLMIDI (GPLv3+) ==")
+        setLicense(LICENSE_GPL_3p)
         list(APPEND SDL_MIXER_DEFINITIONS -DMUSIC_MID_ADLMIDI)
         set(LIBMATH_NEEDED 1)
         list(APPEND SDL_MIXER_INCLUDE_PATHS ${ADLMIDI_INCLUDE_DIRS})
