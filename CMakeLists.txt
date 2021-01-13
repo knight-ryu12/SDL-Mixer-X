@@ -1,5 +1,5 @@
 cmake_minimum_required (VERSION 2.8.12)
-project(SDLMixerX C)
+project(SDLMixerX C CXX)
 
 set(SDLMixerX_VERSION_MAJOR 2)
 set(SDLMixerX_VERSION_MINOR 5)
@@ -240,7 +240,10 @@ if(USE_MIDI)
     include(music_midi_opn)
     include(music_timidity)
     include(music_fluidsynth)
+    include(music_nativemidi_alt_win32)
     include(music_nativemidi)
+
+    include(music_midi_seq)
 
     if(NOT USE_MIDI_ADLMIDI AND
        NOT USE_MIDI_OPNMIDI AND
@@ -371,7 +374,7 @@ if(SDL_MIXER_X_SHARED AND NOT BUILD_AS_VB6_BINDING)
         SOVERSION ${SDLMixerX_VERSION_MAJOR}
     )
     target_link_libraries(SDL2_mixer_ext PRIVATE ${SDLMixerX_LINK_LIBS})
-    target_compile_definitions(SDL2_mixer_ext PRIVATE ${SDL_MIXER_DEFINITIONS})
+    target_compile_definitions(SDL2_mixer_ext PRIVATE ${SDL_MIXER_DEFINITIONS} -DDLL_EXPORT)
     target_include_directories(SDL2_mixer_ext PRIVATE
         ${SDLMixerX_SOURCE_DIR}/include
         ${SDLMixerX_SOURCE_DIR}/src
@@ -407,7 +410,7 @@ if(BUILD_AS_VB6_BINDING)
     add_library(SDL2_mixer_ext_VB6 MODULE ${SDLMixerX_SOURCES})
     set_target_properties(SDL2_mixer_ext_VB6 PROPERTIES OUTPUT_NAME SDL2MixerVB)
     set_target_properties(SDL2_mixer_ext_VB6 PROPERTIES PREFIX "")
-    target_compile_definitions(SDL2_mixer_ext_VB6 PRIVATE ${SDL_MIXER_DEFINITIONS} -DFORCE_STDCALLS)
+    target_compile_definitions(SDL2_mixer_ext_VB6 PRIVATE ${SDL_MIXER_DEFINITIONS} -DFORCE_STDCALLS -DDLL_EXPORT)
     target_link_libraries(SDL2_mixer_ext_VB6 ${SDLMixerX_LINK_LIBS})
     target_include_directories(SDL2_mixer_ext_VB6 PUBLIC
         ${SDLMixerX_SOURCE_DIR}/include
