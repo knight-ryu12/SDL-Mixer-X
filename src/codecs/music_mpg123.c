@@ -1,6 +1,6 @@
 /*
   SDL_mixer:    An audio mixer library based on the SDL library
-  Copyright (C) 1997-2020 Sam Lantinga <slouken@libsdl.org>
+  Copyright (C) 1997-2021 Sam Lantinga <slouken@libsdl.org>
 
   This software is provided 'as-is', without any express or implied
   warranty.    In no event will the authors be held liable for any damages
@@ -227,12 +227,15 @@ static void *MPG123_CreateFromRW(SDL_RWops *src, int freesrc)
 
     music = (MPG123_Music*)SDL_calloc(1, sizeof(*music));
     if (!music) {
+        SDL_OutOfMemory();
         return NULL;
     }
-    music->mp3file.src = src;
     music->volume = MIX_MAX_VOLUME;
 
-    music->mp3file.length = SDL_RWsize(src);
+    if (MP3_RWinit(&music->mp3file, src) < 0) {
+        SDL_free(music);
+        return NULL;
+    }
     meta_tags_init(&music->tags);
     if (mp3_read_tags(&music->tags, &music->mp3file, SDL_TRUE) < 0) {
         SDL_free(music);
@@ -300,8 +303,8 @@ static void *MPG123_CreateFromRW(SDL_RWops *src, int freesrc)
         return NULL;
     }
 #ifdef DEBUG_MPG123
-        printf("MPG123 format: %s, channels: %d, rate: %ld\n",
-                mpg123_format_str(encoding), channels, rate);
+    printf("MPG123 format: %s, channels: %d, rate: %ld\n",
+            mpg123_format_str(encoding), channels, rate);
 #endif
 
     format = mpg123_format_to_sdl(encoding);
@@ -503,19 +506,19 @@ Mix_MusicInterface Mix_MusicInterface_MPG123 =
     NULL,   /* CreateFromFile */
     NULL,   /* CreateFromFileEx [MIXER-X]*/
     MPG123_SetVolume,
-    MPG123_GetVolume,   /* GetVolume [MIXER-X]*/
+    MPG123_GetVolume,
     MPG123_Play,
     NULL,   /* IsPlaying */
     MPG123_GetAudio,
     MPG123_Seek,
-    MPG123_Tell, /* Tell [MIXER-X]*/
+    MPG123_Tell,
     MPG123_Duration,
     NULL,   /* Set Tempo multiplier [MIXER-X] */
     NULL,   /* Get Tempo multiplier [MIXER-X] */
-    NULL,   /* LoopStart [MIXER-X]*/
-    NULL,   /* LoopEnd [MIXER-X]*/
-    NULL,   /* LoopLength [MIXER-X]*/
-    MPG123_GetMetaTag,/* GetMetaTag [MIXER-X]*/
+    NULL,   /* LoopStart */
+    NULL,   /* LoopEnd */
+    NULL,   /* LoopLength */
+    MPG123_GetMetaTag,
     NULL,   /* Pause */
     NULL,   /* Resume */
     NULL,   /* Stop */

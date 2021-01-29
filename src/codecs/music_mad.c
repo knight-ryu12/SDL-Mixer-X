@@ -1,6 +1,6 @@
 /*
   SDL_mixer:  An audio mixer library based on the SDL library
-  Copyright (C) 1997-2020 Sam Lantinga <slouken@libsdl.org>
+  Copyright (C) 1997-2021 Sam Lantinga <slouken@libsdl.org>
 
   This software is provided 'as-is', without any express or implied
   warranty.  In no event will the authors be held liable for any damages
@@ -322,10 +322,12 @@ static void *MAD_CreateFromRW(SDL_RWops *src, int freesrc)
         SDL_OutOfMemory();
         return NULL;
     }
-    music->mp3file.src = src;
     music->volume = MIX_MAX_VOLUME;
 
-    music->mp3file.length = SDL_RWsize(src);
+    if (MP3_RWinit(&music->mp3file, src) < 0) {
+        SDL_free(music);
+        return NULL;
+    }
     meta_tags_init(&music->tags);
     if (mp3_read_tags(&music->tags, &music->mp3file, SDL_FALSE) < 0) {
         SDL_free(music);
@@ -663,19 +665,19 @@ Mix_MusicInterface Mix_MusicInterface_MAD =
     NULL,   /* CreateFromFile */
     NULL,   /* CreateFromFileEx [MIXER-X]*/
     MAD_SetVolume,
-    MAD_GetVolume,   /* GetVolume [MIXER-X]*/
+    MAD_GetVolume,
     MAD_Play,
     NULL,   /* IsPlaying */
     MAD_GetAudio,
     MAD_Seek,
-    MAD_Tell, /* [MIXER-X]*/
+    MAD_Tell,
     MAD_Duration,
     NULL,   /* Set Tempo multiplier [MIXER-X] */
     NULL,   /* Get Tempo multiplier [MIXER-X] */
-    NULL,   /* LoopStart [MIXER-X]*/
-    NULL,   /* LoopEnd [MIXER-X]*/
-    NULL,   /* LoopLength [MIXER-X]*/
-    MAD_GetMetaTag, /* GetMetaTag [MIXER-X]*/
+    NULL,   /* LoopStart */
+    NULL,   /* LoopEnd */
+    NULL,   /* LoopLength */
+    MAD_GetMetaTag,
     NULL,   /* Pause */
     NULL,   /* Resume */
     NULL,   /* Stop */

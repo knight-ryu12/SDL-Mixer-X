@@ -1,6 +1,6 @@
 /*
   SDL_mixer:  An audio mixer library based on the SDL library
-  Copyright (C) 1997-2020 Sam Lantinga <slouken@libsdl.org>
+  Copyright (C) 1997-2021 Sam Lantinga <slouken@libsdl.org>
 
   This software is provided 'as-is', without any express or implied
   warranty.  In no event will the authors be held liable for any damages
@@ -273,19 +273,19 @@ Mix_MusicInterface Mix_MusicInterface_TIMIDITY =
     NULL,   /* CreateFromFile */
     NULL,   /* CreateFromFileEx [MIXER-X]*/
     TIMIDITY_SetVolume,
-    TIMIDITY_GetVolume,   /* GetVolume [MIXER-X]*/
+    TIMIDITY_GetVolume,
     TIMIDITY_Play,
     NULL,   /* IsPlaying */
     TIMIDITY_GetAudio,
     TIMIDITY_Seek,
-    NULL,   /* Tell [MIXER-X]*/
+    NULL,   /* Tell */
     TIMIDITY_Duration,
     NULL,   /* Set Tempo multiplier [MIXER-X] */
     NULL,   /* Get Tempo multiplier [MIXER-X] */
-    NULL,   /* LoopStart [MIXER-X]*/
-    NULL,   /* LoopEnd [MIXER-X]*/
-    NULL,   /* LoopLength [MIXER-X]*/
-    NULL,   /* GetMetaTag [MIXER-X]*/
+    NULL,   /* LoopStart */
+    NULL,   /* LoopEnd */
+    NULL,   /* LoopLength */
+    NULL,   /* GetMetaTag */
     NULL,   /* Pause */
     NULL,   /* Resume */
     NULL,   /* Stop */

@@ -1,6 +1,6 @@
 /*
   SDL_mixer:  An audio mixer library based on the SDL library
-  Copyright (C) 1997-2020 Sam Lantinga <slouken@libsdl.org>
+  Copyright (C) 1997-2021 Sam Lantinga <slouken@libsdl.org>
 
   This software is provided 'as-is', without any express or implied
   warranty.  In no event will the authors be held liable for any damages
@@ -550,19 +550,19 @@ Mix_MusicInterface Mix_MusicInterface_Opus =
     NULL,   /* CreateFromFile */
     NULL,   /* CreateFromFileEx [MIXER-X]*/
     OPUS_SetVolume,
-    OPUS_GetVolume,   /* GetVolume [MIXER-X]*/
+    OPUS_GetVolume,
     OPUS_Play,
     NULL,   /* IsPlaying */
     OPUS_GetAudio,
     OPUS_Seek,
-    OPUS_Tell, /* Tell [MIXER-X]*/
+    OPUS_Tell,
     OPUS_Duration,
     NULL,   /* Set Tempo multiplier [MIXER-X] */
     NULL,   /* Get Tempo multiplier [MIXER-X] */
-    OPUS_LoopStart, /* LoopStart [MIXER-X]*/
-    OPUS_LoopEnd, /* LoopEnd [MIXER-X]*/
-    OPUS_LoopLength, /* LoopLength [MIXER-X]*/
-    OPUS_GetMetaTag, /* GetMetaTag [MIXER-X]*/
+    OPUS_LoopStart,
+    OPUS_LoopEnd,
+    OPUS_LoopLength,
+    OPUS_GetMetaTag,
     NULL,   /* Pause */
     NULL,   /* Resume */
     NULL,   /* Stop */

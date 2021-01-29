@@ -1,6 +1,6 @@
 /*
   SDL_mixer:  An audio mixer library based on the SDL library
-  Copyright (C) 1997-2020 Sam Lantinga <slouken@libsdl.org>
+  Copyright (C) 1997-2021 Sam Lantinga <slouken@libsdl.org>
 
   This software is provided 'as-is', without any express or implied
   warranty.  In no event will the authors be held liable for any damages
@@ -498,19 +498,19 @@ Mix_MusicInterface Mix_MusicInterface_MIKMOD =
     NULL,   /* CreateFromFile */
     NULL,   /* CreateFromFileEx [MIXER-X]*/
     MIKMOD_SetVolume,
-    MIKMOD_GetVolume,   /* GetVolume [MIXER-X]*/
+    MIKMOD_GetVolume,
     MIKMOD_Play,
     MIKMOD_IsPlaying,
     MIKMOD_GetAudio,
     MIKMOD_Seek,
-    NULL,   /* Tell [MIXER-X]*/
+    NULL,   /* Tell */
     NULL,   /* Duration */
     NULL,   /* Set Tempo multiplier [MIXER-X] */
     NULL,   /* Get Tempo multiplier [MIXER-X] */
-    NULL,   /* LoopStart [MIXER-X]*/
-    NULL,   /* LoopEnd [MIXER-X]*/
-    NULL,   /* LoopLength [MIXER-X]*/
-    MIKMOD_GetMetaTag,/* GetMetaTag [MIXER-X]*/
+    NULL,   /* LoopStart */
+    NULL,   /* LoopEnd */
+    NULL,   /* LoopLength */
+    MIKMOD_GetMetaTag,
     NULL,   /* Pause */
     NULL,   /* Resume */
     MIKMOD_Stop,
